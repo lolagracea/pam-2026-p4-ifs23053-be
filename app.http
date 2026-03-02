@@ -1,0 +1,251 @@
+## Global Variabel
+#@BaseUrl = https://pam-2026-p4-ifs18005-be.delcom.org:8080
+@BaseUrl = http://127.0.0.1:8000
+
+## Profile
+## ===========================================
+
+### Mengambil semua data tumbuhan
+# @name GetProfile
+GET {{BaseUrl}}/profile
+Content-Type: application/json
+
+### Mengambil photo profil
+# @name GetProfilePhoto
+GET {{BaseUrl}}/profile/photo
+Content-Type: application/json
+
+
+## Plants
+## ===========================================
+
+### Mengambil semua data tumbuhan
+# @name GetAllPlants
+GET {{BaseUrl}}/plants?search=
+Content-Type: application/json
+
+#> {%
+#    client.global.set("plantId", response.body.data.plants[0].id);
+#    console.log(client.global.get("plantId"))
+#%}
+
+### Menambahkan data tumbuhan baru
+# @name PostPlants
+POST {{BaseUrl}}/plants
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="nama"
+
+Kangkung
+--WebAppBoundary
+Content-Disposition: form-data; name="deskripsi"
+
+Brokoli adalah sayuran hijau yang kaya vitamin, mineral, dan serat
+--WebAppBoundary
+Content-Disposition: form-data; name="manfaat"
+
+Membantu detoksifikasi dan menjaga kesehatan mata
+--WebAppBoundary
+Content-Disposition: form-data; name="efekSamping"
+
+Dapat menyebabkan kembung
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="example.png"
+Content-Type: image/png
+
+< ./example.png
+--WebAppBoundary--
+
+> {%
+    client.global.set("plantId", response.body.data.plantId);
+    console.log(client.global.get("plantId"))
+%}
+
+### Mengambil data tumbuhan berdasarkan id-nya
+# @name GetPlantById
+GET {{BaseUrl}}/plants/{{plantId}}
+Content-Type: application/json
+
+### Melihat gambar tumbuhan
+# @name GetPlantImageById
+GET {{BaseUrl}}/plants/{{plantId}}/image
+Content-Type: application/json
+
+### Mengubah hanya data plant berdasarkan id-nya
+# @name PutPlantOnlyData
+PUT {{BaseUrl}}/plants/{{plantId}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="nama"
+
+Brokoli Update
+--WebAppBoundary
+Content-Disposition: form-data; name="deskripsi"
+
+Brokoli adalah sayuran hijau yang kaya vitamin, mineral, dan serat
+--WebAppBoundary
+Content-Disposition: form-data; name="manfaat"
+
+Membantu detoksifikasi dan menjaga kesehatan mata
+--WebAppBoundary
+Content-Disposition: form-data; name="efekSamping"
+
+Dapat menyebabkan kembung
+--WebAppBoundary--
+
+### Mengubah gambar dan data plant berdasarkan id-nya
+# @name PutPlant
+PUT {{BaseUrl}}/plants/{{plantId}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="nama"
+
+Brokoli
+--WebAppBoundary
+Content-Disposition: form-data; name="deskripsi"
+
+Brokoli adalah sayuran hijau yang kaya vitamin, mineral, dan serat
+--WebAppBoundary
+Content-Disposition: form-data; name="manfaat"
+
+Membantu detoksifikasi dan menjaga kesehatan mata
+--WebAppBoundary
+Content-Disposition: form-data; name="efekSamping"
+
+Dapat menyebabkan kembung
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="example.png"
+Content-Type: image/png
+
+< ./example.png
+--WebAppBoundary--
+
+### Menghapus data plant berdasarkan id-nya
+# @name DeletePlant
+DELETE {{BaseUrl}}/plants/{{plantId}}
+Content-Type: application/json
+
+## Destinations
+## ===========================================
+
+### Mengambil semua data destinasi
+# @name GetAllDestinations
+GET {{BaseUrl}}/destinations?search=
+Content-Type: application/json
+
+> {%
+    if (response.status < 300 && response.body?.data?.destinations?.length > 0) {
+        client.global.set("destinationId", response.body.data.destinations[0].id);
+        console.log("destinationId:", client.global.get("destinationId"))
+    } else {
+        console.log("Tidak ada destinations / gagal ambil data:", response.body?.message)
+    }
+%}
+
+### Menambahkan data destinasi baru
+# @name PostDestination
+POST {{BaseUrl}}/destinations
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Tokyo
+--WebAppBoundary
+Content-Disposition: form-data; name="country"
+
+Japan
+--WebAppBoundary
+Content-Disposition: form-data; name="city"
+
+Tokyo
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Tokyo adalah kota metropolitan terbesar di Jepang.
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="example.png"
+Content-Type: image/png
+
+< ./example.png
+--WebAppBoundary--
+
+> {%
+    // kalau create sukses, set destinationId dari hasil POST
+    if (response.status < 300 && response.body?.data?.destinationId) {
+        client.global.set("destinationId", response.body.data.destinationId);
+        console.log("destinationId:", client.global.get("destinationId"))
+    } else {
+        console.log("Gagal create destination:", response.body?.message)
+    }
+%}
+
+### Mengambil data destinasi berdasarkan id-nya
+# @name GetDestinationById
+GET {{BaseUrl}}/destinations/{{destinationId}}
+Content-Type: application/json
+
+### Melihat gambar destinasi
+# @name GetDestinationImageById
+GET {{BaseUrl}}/destinations/{{destinationId}}/image
+Content-Type: application/json
+
+### Mengubah hanya data destinasi berdasarkan id-nya
+# @name PutDestinationOnlyData
+PUT {{BaseUrl}}/destinations/{{destinationId}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Tokyo Update
+--WebAppBoundary
+Content-Disposition: form-data; name="country"
+
+Japan
+--WebAppBoundary
+Content-Disposition: form-data; name="city"
+
+Tokyo
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Deskripsi destinasi diperbarui
+--WebAppBoundary--
+
+### Mengubah gambar dan data destinasi berdasarkan id-nya
+# @name PutDestination
+PUT {{BaseUrl}}/destinations/{{destinationId}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Tokyo Final
+--WebAppBoundary
+Content-Disposition: form-data; name="country"
+
+Japan
+--WebAppBoundary
+Content-Disposition: form-data; name="city"
+
+Tokyo
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Deskripsi destinasi final
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="example.png"
+Content-Type: image/png
+
+< ./example.png
+--WebAppBoundary--
+
+### Menghapus data destinasi berdasarkan id-nya
+# @name DeleteDestination
+DELETE {{BaseUrl}}/destinations/{{destinationId}}
+Content-Type: application/json
+
