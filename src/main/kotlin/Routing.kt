@@ -10,11 +10,13 @@ import org.delcom.data.ErrorResponse
 import org.delcom.helpers.parseMessageToMap
 import org.delcom.services.PlantService
 import org.delcom.services.ProfileService
+import org.delcom.services.DestinationService
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
     val plantService: PlantService by inject()
     val profileService: ProfileService by inject()
+    val destinationService: DestinationService by inject() // ✅ Tambahan
 
     install(StatusPages) {
         // Tangkap AppException
@@ -46,40 +48,43 @@ fun Application.configureRouting() {
 
     routing {
         get("/") {
-            call.respondText("API telah berjalan. Dibuat oleh Lola Tampubolon.")
+            call.respondText("API telah berjalan. Dibuat oleh Abdullah Ubaid.")
         }
 
-        // Route Plants
+        // =========================
+        // Route Plants (existing)
+        // =========================
         route("/plants") {
-            get {
-                plantService.getAllPlants(call)
-            }
-            post {
-                plantService.createPlant(call)
-            }
-            get("/{id}") {
-                plantService.getPlantById(call)
-            }
-            put("/{id}") {
-                plantService.updatePlant(call)
-            }
-            delete("/{id}") {
-                plantService.deletePlant(call)
-            }
+            get { plantService.getAllPlants(call) }
+            post { plantService.createPlant(call) }
 
-            get("/{id}/image") {
-                plantService.getPlantImage(call)
-            }
+            get("/{id}") { plantService.getPlantById(call) }
+            put("/{id}") { plantService.updatePlant(call) }
+            delete("/{id}") { plantService.deletePlant(call) }
+
+            get("/{id}/image") { plantService.getPlantImage(call) }
         }
 
-        // Route Profile
-        route("/profile"){
-            get {
-                profileService.getProfile(call)
-            }
-            get("/photo") {
-                profileService.getProfilePhoto(call)
-            }
+        // =========================
+        // Route Destinations (NEW)
+        // =========================
+        route("/destinations") {
+            get { destinationService.getAllDestinations(call) }
+            post { destinationService.createDestination(call) }
+
+            get("/{id}") { destinationService.getDestinationById(call) }
+            put("/{id}") { destinationService.updateDestination(call) }
+            delete("/{id}") { destinationService.deleteDestination(call) }
+
+            get("/{id}/image") { destinationService.getDestinationImage(call) }
+        }
+
+        // =========================
+        // Route Profile (existing)
+        // =========================
+        route("/profile") {
+            get { profileService.getProfile(call) }
+            get("/photo") { profileService.getProfilePhoto(call) }
         }
     }
 }
