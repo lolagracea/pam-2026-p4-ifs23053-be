@@ -10,7 +10,6 @@ import kotlinx.serialization.json.Json
 import org.delcom.module.appModule
 import org.delcom.helpers.configureDatabases
 import org.koin.ktor.plugin.Koin
-import org.delcom.configureRouting
 
 fun main(args: Array<String>) {
     val dotenv = dotenv {
